@@ -14,7 +14,6 @@ class Game {
         if(this.winner) return;
         this.board[index] = this.turn;
 
-        console.log(this.board)
         if (this.checkWinner()) {
             this.winner = this.turn;
         }
