@@ -1,58 +1,10 @@
-class Game {
-
-    board: string[];
-    winner: string;
-    turn: string;
-
-    init = () => {
-        this.board = [];
-        this.winner = '';
-        this.turn = 'x';
-    }
-
-    onClick = (index: number) => {
-        if(this.winner) return;
-        this.board[index] = this.turn;
-
-        if (this.checkWinner()) {
-            this.winner = this.turn;
-        }
-        else {
-            this.nextTurn();
-        }
-    }
-
-    //Manually checking for the winner
-    checkWinner = () => {
-        if (
-            (this.turn === this.board[0] && this.turn === this.board[1] && this.turn === this.board[2]) ||
-            (this.turn === this.board[3] && this.turn === this.board[4] && this.turn === this.board[5]) ||
-            (this.turn === this.board[6] && this.turn === this.board[7] && this.turn === this.board[8]) ||
-            (this.turn === this.board[0] && this.turn === this.board[3] && this.turn === this.board[6]) ||
-            (this.turn === this.board[1] && this.turn === this.board[4] && this.turn === this.board[7]) ||
-            (this.turn === this.board[2] && this.turn === this.board[5] && this.turn === this.board[8]) ||
-            (this.turn === this.board[0] && this.turn === this.board[4] && this.turn === this.board[8]) ||
-            (this.turn === this.board[2] && this.turn === this.board[4] && this.turn === this.board[6])) {
-            console.log(this.turn, "WINS")
-                return true;
-        } else { return false; }
-
-    }
-
-    //Change to the other player's turn
-    nextTurn = () => {
-        this.turn = (this.turn === 'x') ? 'o' : 'x';
-    }
-}
-
+import { TicTacToeGame, TicTacToeGameState } from './tictactoe-game';
 class HTMLRenderer {
+    game = new TicTacToeGameState();
 
-    game;
-    spaces;
-
-    onClickSpace = (index) => {
-        this.spaces[index].innerText = this.game.turn;
-        this.game.onClick(index); 
+    onClickSpace = (index, element) => {
+        element.innerText = this.game.turn;
+        this.game = TicTacToeGame.onClick(this.game, index); 
         if(this.game.winner){
             let gameElement = document.getElementById("game");
             let gameEndElement = document.createElement("div");
@@ -62,28 +14,23 @@ class HTMLRenderer {
         }
     }
 
-    init = (gameObj) => {
-        this.spaces = [];
-        this.game = gameObj;
+    init = () => {
+        this.game = TicTacToeGame.init();
         let gameElement = document.getElementById("game");
-        let gameRowElement, gameCellElement;
+        let gameRowElement;
         for (let index = 0; index < 9; ++index) {
             if (index % 3 === 0) {
                 gameRowElement = document.createElement("div");
                 gameRowElement.className = "row";
                 gameElement?.appendChild(gameRowElement);
             }
-            gameCellElement = document.createElement("div");
+            let gameCellElement = document.createElement("div");
             gameCellElement.className = "cell";
             gameRowElement.appendChild(gameCellElement);
-            this.spaces.push(gameCellElement)
-            gameCellElement.onclick = (() => this.onClickSpace(index));
+            gameCellElement.onclick = (() => this.onClickSpace(index, gameCellElement));
         }
-
     }
 }
 
-let game = new Game();
-game.init();
 let renderer = new HTMLRenderer();
-renderer.init(game);
+renderer.init();
