@@ -1,5 +1,12 @@
 {
-  "dependencies": {
-    "tsc": "^2.0.4"
+  "name": "tictactoe-typescript",
+  "productName": "tictactoe-typescript",
+  "version": "1.0.0",
+  "description": "TicTacToe implemented in Typescript",
+  "scripts": {
+    "build": "./node_modules//typescript/bin/tsc && cp src/index.html dist && cp src/index.css dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
   }
 }
