@@ -13,8 +13,10 @@ class TicTacToeGameState {
     turn: string;
 }
 class TicTacToeGame {
-    static onClick = (game, index): TicTacToeGameState => {
+    static onClick = (game: TicTacToeGameState, index: number): TicTacToeGameState => {
+        //If there is a winner, return game
         let result: TicTacToeGameState = game;
+        //Only change the game state if there is no winner
         if (game.winner === '') {
             //Clone the game object
             result = {
@@ -69,8 +71,12 @@ class TicTacToeGame {
 class HTMLRenderer {
     game = new TicTacToeGameState();
 
-    onClickSpace = (index, element) => {
-        element.innerText = this.game.turn;
+    onClickSpace = (index: number, element: HTMLImageElement) => {
+        //Determine what to display at this cell
+        if (this.game.turn === 'x') { element.src = "./img/x.svg" }
+        else if (this.game.turn === 'o') { element.src = "./img/o.svg" }
+
+        //Calculate updated game state
         this.game = TicTacToeGame.onClick(this.game, index); 
         if(this.game.winner){
             let gameElement = document.getElementById("game");
@@ -91,10 +97,13 @@ class HTMLRenderer {
                 gameRowElement.className = "row";
                 gameElement?.appendChild(gameRowElement);
             }
-            let gameCellElement = document.createElement("div");
+
+            //Create the cell and append to the row
+            let gameCellElement = document.createElement("img");
             gameCellElement.className = "cell";
-            gameRowElement.appendChild(gameCellElement);
+            gameCellElement.src = "./img/blank.svg";
             gameCellElement.onclick = (() => this.onClickSpace(index, gameCellElement));
+            gameRowElement.appendChild(gameCellElement);
         }
     }
 }
